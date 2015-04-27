@@ -27,7 +27,8 @@ require('base')
 require('torch')
 ptb = require('data')
 -- Train 1 day and gives 82 perplexity.
-local params = {batch_size=20,
+--[[
+local params = {batch_size=1,
                 seq_length=50,
                 layers=2,
                 decay=1.15,
@@ -39,8 +40,8 @@ local params = {batch_size=20,
                 max_epoch=14,
                 max_max_epoch=20,
                 max_grad_norm=10}
+]]--
 
---[[
 -- Trains 1h and gives test 115 perplexity.
 local params = {batch_size=100,
                 seq_length=50,
@@ -54,7 +55,6 @@ local params = {batch_size=100,
                 max_epoch=4,
                 max_max_epoch=13,
                 max_grad_norm=5}
-]]--
 function transfer_data(x)
   return x:cuda()
 end
@@ -330,9 +330,9 @@ function generating_sequence()
     end
 end
 function evaluation()
-    filename = '/scratch/mc5283/a4/char_pred_large_model.net'
+    filename = '/scratch/mc5283/a4/char_pred_model.net'
     model = torch.load(filename)
-    state_train = {data=transferdata(ptb.traindataset(params.batch_size))}
+    state_train = {data=transfer_data(ptb.traindataset(params.batch_size))}
     char_map = ptb.vocab_map
     print('OK GO')
     io.flush()
