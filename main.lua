@@ -27,21 +27,20 @@ require('base')
 require('torch')
 ptb = require('data')
 -- Train 1 day and gives 82 perplexity.
---[[
-local params = {batch_size=20,
-                seq_length=35,
+local params = {batch_size=100,
+                seq_length=50,
                 layers=2,
                 decay=1.15,
                 rnn_size=1500,
                 dropout=0.65,
                 init_weight=0.04,
                 lr=1,
-                vocab_size=10000,
+                vocab_size=50,
                 max_epoch=14,
                 max_max_epoch=55,
                 max_grad_norm=10}
-]]--
 
+--[[
 -- Trains 1h and gives test 115 perplexity.
 local params = {batch_size=100,
                 seq_length=50,
@@ -55,6 +54,7 @@ local params = {batch_size=100,
                 max_epoch=4,
                 max_max_epoch=13,
                 max_grad_norm=5}
+]]--
 function transfer_data(x)
   return x:cuda()
 end
@@ -255,7 +255,7 @@ function train()
      end
     end
     print('==> saving model')
-    torch.save('/home/user1/melanie/lstm/results/char_pred_model.net', model)
+    torch.save('/home/user1/melanie/lstm/results/char_pred_large_model.net', model)
 end
 
 function table_invert(t)
@@ -329,28 +329,30 @@ function generating_sequence()
         end
     end
 end
-
+function readline()
+    local line = io.read('*line')
+    if line == nil then error({code='EOF'}) end
+    if char_map[line] == nil then error({code="vocab", word = line}) end
+    input = torch.Tensor({char_map[line]})
+    input = input:resize(input:size(1),1):expand(input:size(1), params.batch_size)
+    return input
+end
 function evaluation()
     filename = '/home/user1/melanie/lstm/results/char_pred_model.net'
     model = torch.load(filename)
     state_train = {data=transfer_data(ptb.traindataset(params.batch_size))}
     char_map = ptb.vocab_map
     print('OK GO')
-    function readline()
-        local line = io.read('*line')
-        if line == nil then error({code='EOF'}) end
-        if char_map[line] == nil then error({code="vocab", word = line}) end
-        input = torch.Tensor({char_map[line]})
-        input = input:resize(input:size(1),1):expand(input:size(1), params.batch_size)
-        return input
-    end
+    io.flush()
     while true do
         local ok,line = pcall(readline)
         if not ok then
             if line.code == 'EOF' then
-                break
+                print('word not in vocabulary')
+                io.flush()
             elseif line.code == 'vocab' then
-                break
+                print('word not in vocabulary')
+                io.flush()
             end
         else
             test = {}
@@ -369,6 +371,7 @@ function evaluation()
                 out[i] = prob[i]
             end
             print(table.concat(out," "))
+            io.flush()
         end
     end
 end
