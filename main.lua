@@ -111,7 +111,7 @@ end
 
 function setup()
   print("Creating a RNN LSTM network.")
-  local core_network = torch.load('/home/user1/melanie/lstm/results/core.net')
+  local core_network = torch.load('/scratch/mc5283/a4/core.net')
   paramx, paramdx = core_network:getParameters()
   model.s = {}
   model.ds = {}
@@ -267,13 +267,8 @@ function table_invert(t)
 end
 
 function generating_sequence()
-<<<<<<< HEAD
-    path = '/scratch/mc5283/a4/word_pred_model.net'
-    model = torch.load(path)
-=======
     model = {}
     setup()
->>>>>>> 808aa219dd87fbf3bd1b81b6877b885dfb3d4043
     state_train = {data=transfer_data(ptb.traindataset(params.batch_size))} 
     map = ptb.vocab_map
     reverse_map = table_invert(map)
@@ -335,13 +330,8 @@ function generating_sequence()
     end
 end
 function evaluation()
-<<<<<<< HEAD
-    filename = '/scratch/mc5283/a4/char_pred_model.net'
-    model = torch.load(filename)
-=======
     model = {}
     setup()
->>>>>>> 808aa219dd87fbf3bd1b81b6877b885dfb3d4043
     state_train = {data=transfer_data(ptb.traindataset(params.batch_size))}
     char_map = ptb.vocab_map
     print('OK GO')
