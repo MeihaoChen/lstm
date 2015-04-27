@@ -42,16 +42,16 @@ local params = {batch_size=1,
                 max_grad_norm=10}
 ]]--
 
--- Trains 1h and gives test 115 perplexity.
+-- Trains 1day and gives validation 220 perplexity.
 local params = {batch_size=100,
                 seq_length=50,
                 layers=2,
-                decay=2,
+                decay=1.15,
                 rnn_size=1500,
                 dropout=0.65,
-                init_weight=0.1,
+                init_weight=0.04,
                 lr=1,
-                vocab_size=50,
+                vocab_size=55,
                 max_epoch=4,
                 max_max_epoch=13,
                 max_grad_norm=5}
@@ -266,7 +266,7 @@ function table_invert(t)
     return s
 end
 
-function generating_sequence()
+function query_sentences()
     model = {}
     setup()
     state_train = {data=transfer_data(ptb.traindataset(params.batch_size))} 
@@ -410,7 +410,7 @@ function main()
         train()
     
     elseif opt.mode == 'query' then
-        generating_sequence()
+        query_sentences()
 
     elseif opt.mode == 'evaluate' then
         evaluation()
