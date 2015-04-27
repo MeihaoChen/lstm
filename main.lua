@@ -338,8 +338,9 @@ function evaluation()
     print('OK GO')
     io.flush()
     function readline()
-        local line = io.read('*line')
+        local line = io.read('*line'):lower()
         if line == nil then error({code='EOF'}) end
+        if line == ' ' then line = '_' end
         if char_map[line] == nil then error({code="vocab", word = line}) end
         input = torch.Tensor({char_map[line]})
         input = input:resize(input:size(1),1):expand(input:size(1), params.batch_size)
