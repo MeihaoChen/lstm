@@ -334,6 +334,7 @@ function evaluation()
     setup()
     state_train = {data=transfer_data(ptb.traindataset(params.batch_size))}
     char_map = ptb.vocab_map
+    g_replace_table(model.s[0], model.start_s)
     print('OK GO')
     io.flush()
     function readline()
@@ -360,11 +361,11 @@ function evaluation()
             reset_state(test)
             g_disable_dropout(model.rnns)
             local perp = 0
-            g_replace_table(model.s[0], model.start_s)
             local x = test.data[1]
             local y = torch.zeros(params.batch_size):cuda()
             local s = model.s[0]
             perp_tmp, model.s[1], pred = unpack(model.rnns[1]:forward({x,y,model.s[0]}))
+            g_replace_table(model.s[0], model.s[1])
             prob = pred[1]
             out = {}
             for i = 1, params.seq_length do
