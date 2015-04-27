@@ -27,17 +27,17 @@ require('base')
 require('torch')
 ptb = require('data')
 -- Train 1 day and gives 82 perplexity.
-local params = {batch_size=100,
+local params = {batch_size=20,
                 seq_length=50,
                 layers=2,
                 decay=1.15,
-                rnn_size=1500,
-                dropout=0.65,
-                init_weight=0.04,
+                rnn_size=200,
+                dropout=0.5,
+                init_weight=0.05,
                 lr=1,
                 vocab_size=50,
                 max_epoch=14,
-                max_max_epoch=55,
+                max_max_epoch=20,
                 max_grad_norm=10}
 
 --[[
@@ -255,7 +255,7 @@ function train()
      end
     end
     print('==> saving model')
-    torch.save('/home/user1/melanie/lstm/results/char_pred_large_model.net', model)
+    torch.save('/scratch/mc5283/a4/char_pred_medium_model.net', model)
 end
 
 function table_invert(t)
@@ -267,7 +267,7 @@ function table_invert(t)
 end
 
 function generating_sequence()
-    path = '/home/user1/melanie/lstm/results/word_pred_model.net'
+    path = '/scratch/mc5283/a4/word_pred_model.net'
     model = torch.load(path)
     state_train = {data=transfer_data(ptb.traindataset(params.batch_size))} 
     map = ptb.vocab_map
@@ -329,21 +329,21 @@ function generating_sequence()
         end
     end
 end
-function readline()
-    local line = io.read('*line')
-    if line == nil then error({code='EOF'}) end
-    if char_map[line] == nil then error({code="vocab", word = line}) end
-    input = torch.Tensor({char_map[line]})
-    input = input:resize(input:size(1),1):expand(input:size(1), params.batch_size)
-    return input
-end
 function evaluation()
-    filename = '/home/user1/melanie/lstm/results/char_pred_model.net'
+    filename = '/scratch/mc5283/a4/char_pred_large_model.net'
     model = torch.load(filename)
-    state_train = {data=transfer_data(ptb.traindataset(params.batch_size))}
+    state_train = {data=transferdata(ptb.traindataset(params.batch_size))}
     char_map = ptb.vocab_map
     print('OK GO')
     io.flush()
+    function readline()
+        local line = io.read('*line')
+        if line == nil then error({code='EOF'}) end
+        if char_map[line] == nil then error({code="vocab", word = line}) end
+        input = torch.Tensor({char_map[line]})
+        input = input:resize(input:size(1),1):expand(input:size(1), params.batch_size)
+        return input
+    end
     while true do
         local ok,line = pcall(readline)
         if not ok then
@@ -388,7 +388,7 @@ function main()
     end
 
     if opt.mode == 'train' then
-        g_init_gpu({2})
+        g_init_gpu({})
         state_train = {data=transfer_data(ptb.traindataset(params.batch_size))}
         state_valid =  {data=transfer_data(ptb.validdataset(params.batch_size))}
         --state_test =  {data=transfer_data(ptb.testdataset(params.batch_size))}
