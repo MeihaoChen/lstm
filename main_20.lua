@@ -27,17 +27,17 @@ require('base')
 require('torch')
 ptb = require('data')
 -- Train 1 day and gives 82 perplexity.
-local params = {batch_size=100,
+local params = {batch_size=20,
                 seq_length=50,
                 layers=2,
                 decay=1.15,
-                rnn_size=1500,
-                dropout=0.65,
-                init_weight=0.04,
+                rnn_size=450,
+                dropout=0.5,
+                init_weight=0.05,
                 lr=1,
                 vocab_size=50,
                 max_epoch=14,
-                max_max_epoch=55,
+                max_max_epoch=20,
                 max_grad_norm=10}
 
 --[[
@@ -46,8 +46,8 @@ local params = {batch_size=100,
                 seq_length=50,
                 layers=2,
                 decay=2,
-                rnn_size=1500,
-                dropout=0.65,
+                rnn_size=200,
+                dropout=0,
                 init_weight=0.1,
                 lr=1,
                 vocab_size=50,
@@ -111,7 +111,7 @@ end
 
 function setup()
   print("Creating a RNN LSTM network.")
-  local core_network = torch.load('/home/user1/melanie/lstm/results/core.net')
+  local core_network = create_network()
   paramx, paramdx = core_network:getParameters()
   model.s = {}
   model.ds = {}
@@ -255,7 +255,7 @@ function train()
      end
     end
     print('==> saving model')
-    torch.save('/home/user1/melanie/lstm/results/char_pred_large_model.net', model)
+    torch.save('/home/user1/melanie/lstm/results/char_pred_med_model.net', model)
 end
 
 function table_invert(t)
@@ -266,9 +266,9 @@ function table_invert(t)
     return s
 end
 
-function generating_sequence()
-    model = {}
-    setup()
+function generating_sentence()
+    path = '/home/user1/melanie/lstm/results/word_pred_model.net'
+    model = torch.load(path)
     state_train = {data=transfer_data(ptb.traindataset(params.batch_size))} 
     map = ptb.vocab_map
     reverse_map = table_invert(map)
@@ -329,21 +329,21 @@ function generating_sequence()
         end
     end
 end
+function readline()
+    local line = io.read('*line')
+    if line == nil then error({code='EOF'}) end
+    if char_map[line] == nil then error({code="vocab", word = line}) end
+    input = torch.Tensor({char_map[line]})
+    input = input:resize(input:size(1),1):expand(input:size(1), params.batch_size)
+    return input
+end
 function evaluation()
-    model = {}
-    setup()
+    filename = '/home/user1/melanie/lstm/results/char_pred_model.net'
+    model = torch.load(filename)
     state_train = {data=transfer_data(ptb.traindataset(params.batch_size))}
     char_map = ptb.vocab_map
     print('OK GO')
     io.flush()
-    function readline()
-        local line = io.read('*line')
-        if line == nil then error({code='EOF'}) end
-        if char_map[line] == nil then error({code="vocab", word = line}) end
-        input = torch.Tensor({char_map[line]})
-        input = input:resize(input:size(1),1):expand(input:size(1), params.batch_size)
-        return input
-    end
     while true do
         local ok,line = pcall(readline)
         if not ok then
@@ -410,7 +410,7 @@ function main()
         train()
     
     elseif opt.mode == 'query' then
-        generating_sequence()
+        generating_sentence()
 
     elseif opt.mode == 'evaluate' then
         evaluation()
