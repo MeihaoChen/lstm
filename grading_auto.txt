@@ -1,0 +1,12 @@
+Generated char level test data? (would be a grave error)
+
+cd mc5283; git log --pretty=format:"%an, %ad : %s" -4
+Meihao Chen, Mon Apr 27 16:39:19 2015 -0400 : change to luajit
+Meihao Chen, Mon Apr 27 16:38:02 2015 -0400 : fix stdin
+Meihao Chen, Mon Apr 27 16:10:52 2015 -0400 : Merge branch 'master' of https://github.com/MeihaoChen/lstm
+Meihao Chen, Mon Apr 27 16:10:13 2015 -0400 : add data
+
+cd mc5283; git log --pretty=format:"%ad" -1
+Mon Apr 27 16:39:19 2015 -0400
+
+Last commit is in time

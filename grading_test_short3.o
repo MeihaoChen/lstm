@@ -1,0 +1,18 @@
+mc5283
+/scratch/ts2387/a4/mc5283
+Flushing proc output until OK GO received
+ --  warning: fbcunn not found. Falling back to cunn
+ --  ==> processing options
+ --  Creating a RNN LSTM network.
+ --  OK GO
+Start test loop
+0	Perplexity: 1279.589479	avgnll: 1.277553	fails: 0
+1000	Perplexity: 372.814689	avgnll: 1.057336	fails: 0
+2000	Perplexity: 272.542492	avgnll: 1.001392	fails: 0
+3000	Perplexity: 373.270606	avgnll: 1.057554	fails: 0
+4000	Perplexity: 395.682937	avgnll: 1.067967	fails: 0
+5000	Perplexity: 354.591606	avgnll: 1.048387	fails: 0
+6000	Perplexity: 354.216225	avgnll: 1.048198	fails: 0
+7000	Perplexity: 345.845009	avgnll: 1.043927	fails: 0
+8000	Perplexity: 315.742338	avgnll: 1.027665	fails: 0
+9000	Perplexity: 300.979702	avgnll: 1.019115	fails: 0

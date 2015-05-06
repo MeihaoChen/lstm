@@ -1,0 +1,29 @@
+# General comments and issues with running your submission
+Worked
+
+# Your test set score
+442000  Perplexity: 294.633555  avgnll: 1.015309        fails: 0
+
+# Your answer to the questions (no comment means correct)
++ Q1 looks right, but you don't manually verify
++ Q2
++ Q3 Not unrolled.
++ Q4 Wording is quite vague and ambiguous.
++ Q5
++ Q6
++ Q7
+
+# Comments on your code
+Don't reallocate & transfer the zero-matrix for pred gradOutput on every backward pass! I didn't deduct points for this though.
+No need to keep working with tensors of size batch_size
+
+# Comments on your write-up
+Surprising difference between the reported 220.698 val perplexity and the 294 test perplexity.
+
+# Grades
++ Test set performance (out of 25): 24
++ Questions            (out of 25): 21
++ Code                 (out of 25): 25
++ Write-up and effort  (out of 25): 25
++ Lateness deduction              :
++ TOTAL (out of 100):             : 95
